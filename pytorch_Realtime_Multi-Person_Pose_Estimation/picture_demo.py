@@ -166,6 +166,7 @@ paf_avg = torch.zeros((len(multiplier),38,oriImg.shape[0], oriImg.shape[1])).cud
 
 toc =time.time()
 print ('time is %.5f'%(toc-tic) )
+
 tic = time.time()
 for m in range(len(multiplier)):
     scale = multiplier[m]
@@ -194,6 +195,8 @@ for m in range(len(multiplier)):
     
 toc =time.time()
 print ('time is %.5f'%(toc-tic) )
+
+
 tic = time.time()
     
 heatmap_avg = T.transpose(T.transpose(T.squeeze(T.mean(heatmap_avg, 0)),0,1),1,2).cuda() 
