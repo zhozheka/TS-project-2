@@ -21,6 +21,8 @@ def hello():
 def c_common(secret):
     global app_keys
     token = '44469681d2d327f801b674ab6ea595b200871d33b518730b90ed99a5377b3bf8d478332bb71150e1cb699'
+
+    rtoken = token[::-1]
     if secret != app_keys['nn_bot']:
         print('Bad agent request to {}'.format(secret))
         return 'bad agent'
@@ -32,10 +34,10 @@ def c_common(secret):
             return app_keys['nn_bot']
             print('confirmation')
         elif rtype == 'message_new':
-            vkapi = get_api(access_token=token[::-1], v='5.74')
+            vkapi = get_api(access_token=rtoken, v='5.74')
             group_id = data['group_id']
             obj = data['object']
-            processor = NNRequests(group_id, vkapi, obj)
+            processor = NNRequests(group_id, rtoken, vkapi, obj)
             print('some action')
             processor.send_answer()
 
