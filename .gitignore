@@ -102,3 +102,19 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+coco/annotations/
+coco/dataset/
+mask_tranfer_learning/dataset/
+mask_tranfer_learning/model/
+mask_tranfer_learning/picture_demo.py
+mask_tranfer_learning/sample_image/
+pose_estimation_segmentation/PoseEstimator/pose_model.pth
+pose_estimation_segmentation/README.md~
+pose_estimation_segmentation/__model/
+pose_estimation_segmentation/__test_picture-27.ipynb
+pose_estimation_segmentation/__test_picture.ipynb
+pose_estimation_segmentation/output/
+pose_estimation_segmentation/result.png
+pose_estimation_segmentation/sample_image/
