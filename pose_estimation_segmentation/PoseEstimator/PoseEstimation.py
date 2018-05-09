@@ -197,6 +197,7 @@ def process_image(net, img_path, torch_device):
 
 
         feed = torch.Tensor(imageToTest_padded).to(torch_device)
+        feed.requires_grad = False
     
         output1, output2, segm_pred = net(feed)
         #print ('output1', output1.size())
