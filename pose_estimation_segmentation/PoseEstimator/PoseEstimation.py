@@ -1,8 +1,9 @@
+import numpy as np
+
 import torch
 from torch import nn
 import cv2
 import util
-import numpy as np
 from scipy.ndimage.filters import gaussian_filter
 import math
 import copy
@@ -122,7 +123,7 @@ class model(nn.Module):
         self.model6_2 = model_dict['block6_2']
         
         if pretrained:
-            old_pth = torch.load('./pose_model.pth')
+            old_pth = torch.load('./PoseEstimator/pose_model.pth')
             self.load_state_dict(old_pth)
         
         
@@ -130,8 +131,8 @@ class model(nn.Module):
         self.segm[12] = nn.Conv2d(in_channels=128, out_channels=2, kernel_size=1, stride=1, padding=0) 
         
         if pretrained:
-            segm_pth = torch.load('./model/segm_block.pth')
-            self.segm.load_state_dict(torch.load('./segm_block.pth'))
+            segm_pth = torch.load('./PoseEstimator/segm_block.pth')
+            self.segm.load_state_dict(segm_pth)
         
         
     def forward(self, x):    
