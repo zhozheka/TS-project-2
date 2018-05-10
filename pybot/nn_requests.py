@@ -6,6 +6,8 @@ import re
 import json
 import requests
 
+from mysocketserver import send_data
+
 class NNRequests:
     def __init__(self, group_id, token, vkapi, obj):
         self.group_id = group_id
@@ -15,9 +17,9 @@ class NNRequests:
     def send_answer(self):
         try:
             att0 = self.object['attachments'][0]['photo']
-            photo_key = self.get_max_photo_key(att0)
+            photo_key = self.get_photo_key(att0)
             photo_url = self.object['attachments'][0]['photo'][photo_key]
-            photo_data = self.upload_remote_photo(photo_url)
+            photo_data = self.upload_processed_photo(photo_url)
             photo_ident = 'photo{}_{}_{}'.format(photo_data['owner_id'], photo_data['id'], photo_data['access_key'])
         except Exception as e:
              photo_ident = None
@@ -37,22 +39,20 @@ class NNRequests:
                 attachment=atts
             )
 
-    def upload_remote_photo(self, url_remote):
-        def file_by_url(url):
-            r = requests.get(url, stream=True)
-            if r.status_code == 200:
-                # print(type(r.content))
-                return r.content
+    def file_by_url(self, url):
+        r = requests.get(url, stream=True)
+        if r.status_code == 200:
+            # print(type(r.content))
+            return r.content
 
+    def upload_photo(self, data):
         upload_server = safe_call(
                                 self.api.photos.getMessagesUploadServer,
                                 access_token=self.token
                             )
         upload_url = upload_server['upload_url']
 
-        remote_file = file_by_url(url_remote)
-
-        post_fields = {'photo': ('smth.png', remote_file)}
+        post_fields = {'photo': ('smth.png', data)}
 
         response = requests.post(upload_url, files=post_fields)
         file_data = json.loads(response.text)
@@ -62,7 +62,16 @@ class NNRequests:
 
         return photo
 
-    def get_max_photo_key(self, data):
+    def upload_remote_photo(self, url_remote):
+        remote_file = self.file_by_url(url_remote)
+        return self.upload_photo(remote_file)
+
+    def upload_processed_photo(self, url_remote):
+        remote_file = self.file_by_url(url_remote)
+        processed_file = send_data(remote_file)
+        return self.upload_photo(processed_file)
+
+    def get_photo_key(self, data, t=''):
         re_photo = re.compile('photo_(\d+)')
         photos = []
         for key in data:
@@ -72,4 +81,12 @@ class NNRequests:
         if photos == []:
             return None
         else:
-            return 'photo_{}'.format(sorted(photos, reverse=True)[0])
+            sorted_keys = sorted(photos)
+            if t == 'max':
+                key = sorted_keys[-1]
+            elif t == 'min':
+                key = sorted_keys[0]
+            else:
+                # key = sorted_keys[int(len(sorted_keys) / 2)]
+                key = 604
+            return 'photo_{}'.format(key)
