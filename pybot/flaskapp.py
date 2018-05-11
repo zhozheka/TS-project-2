@@ -55,4 +55,4 @@ def c_common(secret):
 
 if __name__ == "__main__":
     print('bot started')
-    application.run(host='0.0.0.0', port=5003)
+    application.run(host='0.0.0.0', port=3005)
