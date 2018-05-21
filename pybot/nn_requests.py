@@ -17,7 +17,7 @@ class NNRequests:
     def send_answer(self):
         try:
             att0 = self.object['attachments'][0]['photo']
-            photo_key = self.get_photo_key(att0)
+            photo_key = self.get_photo_key(att0, 'max')
             photo_url = self.object['attachments'][0]['photo'][photo_key]
             photo_data = self.upload_processed_photo(photo_url)
             photo_ident = 'photo{}_{}_{}'.format(photo_data['owner_id'], photo_data['id'], photo_data['access_key'])
