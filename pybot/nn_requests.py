@@ -19,7 +19,11 @@ class NNRequests:
             att0 = self.object['attachments'][0]['photo']
             photo_key = self.get_photo_key(att0, 'max')
             photo_url = self.object['attachments'][0]['photo'][photo_key]
-            photo_data = self.upload_processed_photo(photo_url)
+            try:
+                processing_key = int(self.object['body'])
+            except Exception as e:
+                processing_key = 0
+            photo_data = self.upload_processed_photo(photo_url, processing_key)
             photo_ident = 'photo{}_{}_{}'.format(photo_data['owner_id'], photo_data['id'], photo_data['access_key'])
         except Exception as e:
              photo_ident = None
@@ -30,7 +34,7 @@ class NNRequests:
         else:
             atts = []
 
-        answer = 'hello from bot! Your message was:\n{}\n'.format(self.object['body'])
+        answer = 'Hello! Your processed image:\n{}\n'.format(self.object['body'])
 
         safe_call(
                 self.api.messages.send,
@@ -66,9 +70,9 @@ class NNRequests:
         remote_file = self.file_by_url(url_remote)
         return self.upload_photo(remote_file)
 
-    def upload_processed_photo(self, url_remote):
+    def upload_processed_photo(self, url_remote, key=0):
         remote_file = self.file_by_url(url_remote)
-        processed_file = send_data(remote_file)
+        processed_file = send_data(bytes([key])+remote_file)
         return self.upload_photo(processed_file)
 
     def get_photo_key(self, data, t=''):
