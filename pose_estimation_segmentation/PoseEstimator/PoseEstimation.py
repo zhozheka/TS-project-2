@@ -214,7 +214,7 @@ def process_image(net, img_path, torch_device):
     return heatmap_avg, paf_avg, segm_pred
 
 
-
+'''
 def process_output(heatmap_avg, paf_avg, test_image, skeleton=False):
     #param_, model_ = config_reader()
     param_ = {}
@@ -401,8 +401,7 @@ def process_output(heatmap_avg, paf_avg, test_image, skeleton=False):
     return canvas
 
 
-###########################################################################
-
+'''
 
 def process_output2(heatmap_avg, paf_avg, img_cv, skeleton=False):
     #param_, model_ = config_reader()
@@ -577,8 +576,9 @@ def process_output2(heatmap_avg, paf_avg, img_cv, skeleton=False):
             if -1 in index:
                 continue
             cur_canvas = canvas.copy()
-            Y = candidate[index.astype(int), 0]
-            X = candidate[index.astype(int), 1]
+            Y = (candidate[index.astype(int), 0]).astype(np.int)
+            X = (candidate[index.astype(int), 1]).astype(np.int)
+            '''
             mX = np.mean(X)
             mY = np.mean(Y)
             length = ((X[0] - X[1]) ** 2 + (Y[0] - Y[1]) ** 2) ** 0.5
@@ -586,6 +586,9 @@ def process_output2(heatmap_avg, paf_avg, img_cv, skeleton=False):
             polygon = cv2.ellipse2Poly((int(mY),int(mX)), (int(length/2), stickwidth), int(angle), 0, 360, 1)
             cv2.fillConvexPoly(cur_canvas, polygon, colors[i])
             canvas = cv2.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
+            '''
+            cv2.line(canvas, (Y[0], X[0]), (Y[1], X[1]), colors[i],#color=[255, 0, 0,],
+                     thickness=3, lineType=3)
     return canvas
 
 ###################
